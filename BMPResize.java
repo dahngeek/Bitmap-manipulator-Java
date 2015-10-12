@@ -2,22 +2,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-/*
-===========================================================================
-
-
-AUN NO FUNCIONA NADA......
-
-TO DO.
-----Modificar headers para cambiar el tamaño
-----Al escribir el archivo.. escribir solo lineas pares... (la mitad de elementos)
-
-
-============================================================================
-
-
-*/
-
 public class BMPResize {
 	private String archivo;
 	int[][] redPixeles;
@@ -34,10 +18,20 @@ public class BMPResize {
 		for(int c = 0; c < 54; c++){
 			x[c] = in.read();
 		}
+
+		//Tamaño original
+		System.out.println(x[18]);
+		System.out.println(x[19]);
 		this.width = x[18] * 1 + x[19] * 256 + x[20]*65536 + x[21] * 16777216;
-		//System.out.println(this.width);
+		System.out.println(this.width);
+		System.out.println(x[22]);
+		System.out.println(x[23]);
 		this.height = x[22] * 1 + x[23] * 256 + x[24]*65536 + x[25] * 16777216;
-		//System.out.println(this.height);
+		System.out.println(this.height);
+		
+		
+
+
 		redPixeles = new int[height][width];
 		greenPixeles = new int[height][width];
 		bluePixeles = new int[height][width];
@@ -56,15 +50,24 @@ public class BMPResize {
 		this.flat();
 	}
 	private void thin() throws Exception{
-		FileOutputStream salida = new FileOutputStream(file.substring(0,file.length()-4)+"HRotation.bmp");
+		FileOutputStream salida = new FileOutputStream(file.substring(0,file.length()-4)+"Thin.bmp");
+		//Nuevo Tamaño
+		x[19] = (this.width/2)/256;
+		x[18] = (this.width/2)%256;
+		
+		//this.width = x[18] * 1 + x[19] * 256 + x[20]*65536 + x[21] * 16777216;
+		//System.out.println(this.width);
 		//Inprimimos headers
 		for(int e = 0; e < 54; e++){	
 			salida.write(x[e]);
 		}
+		x[19] = this.width/256;
+		x[18] = this.width%256;
+
 		//imprimimos los pixeles
-		for(int e =  0; e < redPixeles.length; e++){
+		for(int e = 0; e < redPixeles.length; e++){
 			for(int y = 0; y < redPixeles[e].length; y++){
-				if (y+1%2==0) {
+				if (y%2==0) {
 					salida.write(bluePixeles[e][y]);
 					salida.write(greenPixeles[e][y]);
 					salida.write(redPixeles[e][y]);
@@ -77,17 +80,24 @@ public class BMPResize {
 		salida.close();
 	}
 	private void flat() throws Exception{
-		FileOutputStream salida = new FileOutputStream(file.substring(0,file.length()-4)+"VRotation.bmp");
+		FileOutputStream salida = new FileOutputStream(file.substring(0,file.length()-4)+"Flat.bmp");
 		//Inprimimos headers
+		x[23] = (this.height/2)/256;
+		x[22] = (this.height/2)%256;
+		//this.height = x[22] * 1 + x[23] * 256 + x[24]*65536 + x[25] * 16777216;
+		//System.out.println(this.height);
+
 		for(int e = 0; e < 54; e++){	
 			salida.write(x[e]);
 		}
 		//imprimimos los pixeles
 		for(int e =  0; e < redPixeles.length; e++){
 			for(int y = 0; y < redPixeles[e].length; y++){
-				salida.write(bluePixeles[e][y]);
-				salida.write(greenPixeles[e][y]);
-				salida.write(redPixeles[e][y]);
+				if (e%2==0) {
+					salida.write(bluePixeles[e][y]);
+					salida.write(greenPixeles[e][y]);
+					salida.write(redPixeles[e][y]);
+				}
 			}
 		}
 		for(int e = 0; e < 2; e++){

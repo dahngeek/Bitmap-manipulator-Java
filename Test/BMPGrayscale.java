@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 public class BMPGrayscale{
-	public static void escalaGrises(String[] args)throws Exception{	
+	public static void main(String[] args)throws Exception{	
 	String file;
 	int[] x;
 	int[] efe;
@@ -14,7 +14,7 @@ public class BMPGrayscale{
 		file = args [0];
 		x = new int[54];
 		FileInputStream in = new FileInputStream(new File(args[0]));
-		//FileInputStream colortable = new FileInputStream(new File("tabla.bmp"));
+		FileInputStream colortable = new FileInputStream(new File("tabla.bmp"));
 
 		//Leer encabezado
 		for(int c = 0; c < 54; c++){
@@ -27,7 +27,7 @@ public class BMPGrayscale{
 		
 		/* 
 			leamos el color table:
-		
+		*/
 			efe = new int[1024];
 			for(int c = 0; c < 1024; c++){
 			efe[c] = colortable.read();
@@ -38,7 +38,6 @@ public class BMPGrayscale{
 			//System.out.print("\n");
 		}
 		colortable.close();
-		*/
 		/* 
 			==================================================================
 
@@ -46,36 +45,32 @@ public class BMPGrayscale{
 
 			==================================================================
 
-		
+		*/
 		int tamanio = x[2] * 1 + x[3] * 256 + x[4]*65536 + x[5] * 16777216;
 		System.out.println("Tamaño en Bytes:");
 		System.out.println(tamanio);
-*/
+
 		int offset = x[10] * 1 + x[11] * 256 + x[12]*65536 + x[13] * 16777216;
-		/*
 		System.out.println("Offset del array:");
 		System.out.println(offset);
 
 		int header = x[14] * 1 + x[15] * 256 + x[16]*65536 + x[17] * 16777216;
 		System.out.println("Bytes que encontramos en la cabezera:");
 		System.out.println(header);
-		*/
 
 		int width = x[18] * 1 + x[19] * 256 + x[20]*65536 + x[21] * 16777216;
-		//System.out.println("Ancho:");
-		//System.out.println(width);
+		System.out.println("Ancho:");
+		System.out.println(width);
 
 		int height = x[22] * 1 + x[23] * 256 + x[24]*65536 + x[25] * 16777216;
-		//System.out.println("Alto:");
-		//System.out.println(height);
+		System.out.println("Alto:");
+		System.out.println(height);
 
-		/*
 		int planos = x[26] * 1 + x[27]*256;
 		System.out.println("Planos:");
 		System.out.println(planos);
-*/
+
 		int bitaje = x[28] * 1 + x[29]*256;
-		/*
 		System.out.println("Bits :D :");
 		System.out.println(bitaje);
 
@@ -94,35 +89,30 @@ public class BMPGrayscale{
 		int important = x[50] * 1 + x[51] * 256 + x[52]*65536 + x[53] * 16777216;
 		System.out.println("Colores Importantes :");
 		System.out.println(important);
-		*/
+
 		/* 
 			==========================================================================
 						COOOL, VAMOS A CAMBIARLE EL BITTAJEEEEE
 			==========================================================================
-		
-*/
+		*/
+
 		x[28] = 8;
-		/*
 		bitaje = x[28] * 1 + x[29]*256;
 		System.out.println("Bits :");
 		System.out.println(bitaje);
-		*/
+
 		/* 
 			==========================================================================
 						COOOL, VAMOS A CAMBIARLE EL OFFFFSSEEEETTTTTT
 			==========================================================================
-		
-*/
+		*/
+
 		x[10] = 54;
 		x[11] = 4;
-		/*
 		offset = x[10] * 1 + x[11]*256;
 		System.out.println("offset :D :");
 		System.out.println(offset);
-
-
 		// LO DE SIEMPRE.. COPIAR LOS BYTES
-		*/
 
 		red = new int[height][width];
 		green = new int[height][width];
@@ -136,7 +126,7 @@ public class BMPGrayscale{
 		}
 		in.close();
 
-									FileOutputStream salida = new FileOutputStream(file.substring(0,file.length()-4)+"Grayscale.bmp");
+									FileOutputStream salida = new FileOutputStream("grayscale" + file);
 									for(int e = 0; e < 54; e++){	
 									//	if (e != 30 || e !=31 || e !=32 || e !=33 ){ trate de cambiar el header a 8bits porque en esas posiciones estan los bits
 											salida.write(x[e]);
@@ -184,7 +174,6 @@ public class BMPGrayscale{
 											//salida.write(k);//no estoy seguro que funcione como debe de ser
 											
 										}
-										//salida.write(0);
 									}
 									for(int e = 0; e < 2; e++){
 										salida.write(0);

@@ -184,7 +184,6 @@ public class BMPGrayscale{
 											//salida.write(k);//no estoy seguro que funcione como debe de ser
 											
 										}
-										//salida.write(0);
 									}
 									for(int e = 0; e < 2; e++){
 										salida.write(0);
